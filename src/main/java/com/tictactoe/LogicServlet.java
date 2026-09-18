@@ -20,10 +20,11 @@ public class LogicServlet extends HttpServlet {
 
 		// Получаем объект игрового поля из сессии
 		Field field = extractField(currentSession);
+		var currentField = field.getField();
 
 		// получаем индекс ячейки, по которой произошел клик
 		int index = getSelectedIndex(req);
-		Sign currentSign = field.getField().get(index);
+		Sign currentSign = currentField.get(index);
 
 		// Проверяем, что ячейка, по которой был клик пустая.
 		// Иначе ничего не делаем и отправляем пользователя на ту же страницу без изменений
@@ -35,7 +36,7 @@ public class LogicServlet extends HttpServlet {
 		}
 
 		// ставим крестик в ячейке, по которой кликнул пользователь
-		field.getField().put(index, Sign.CROSS);
+		currentField.put(index, Sign.CROSS);
 		if (checkWin(resp, currentSession, field)) {
 			return;
 		}
@@ -44,7 +45,7 @@ public class LogicServlet extends HttpServlet {
 		int emptyFieldIndex = field.getEmptyFieldIndex();
 
 		if (emptyFieldIndex >= 0) {
-			field.getField().put(emptyFieldIndex, Sign.NOUGHT);
+			currentField.put(emptyFieldIndex, Sign.NOUGHT);
 			// Проверяем, не победил ли нолик после добавление последнего нолика
 			if (checkWin(resp, currentSession, field)) {
 				return;
